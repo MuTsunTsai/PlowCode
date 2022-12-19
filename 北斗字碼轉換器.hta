@@ -1,0 +1,191 @@
+<script type="text/javascript" src="sys.js" charset="Big5"></script>
+<html>
+	<head>
+		<title>北斗字碼轉換器 2.8 版</title>
+		<hta:application icon="fav.ico" innerBorder="no" maximizebutton="no" scroll="no" border="dialog">
+		<meta http-equiv="content-type" content="text/html; charest=Big5">
+		<style type="text/css">
+			#WB	table	{ border-collapse:collapse; background:skyblue;
+						table-layout:fixed; border:0px solid black; margin:-1px;}
+			#WB td		{ font:19pt 'Courier New'; cursor:hand; background:skyblue;}
+			body		{ background:buttonface; overflow:hidden; margin:8px;}
+			body, input, select, td
+						{ font:9pt 'Courier New'; cursor:Default;}
+			input, select, textarea, #WB
+						{ border:1px solid black; background:skyblue;}
+			label		{ cursor:hand;}
+			.B			{ float:right; position:relative; right:7px;}
+			.C			{ border:0px solid black; background:buttonface;}
+			#Set		{ display:none;}
+			#WB			{ width:289px; height:138px; overflow-y:scroll; overflow-x:hidden;}
+			#HGLP		{ display:none;}
+		</style>
+
+<body onSelectStart="event.returnValue=false;" onContextMenu="event.returnValue=false;"
+	onKeyDown="if(event.srcElement.nodeName=='BODY') try { T.T.s.select();} catch(e) {}"
+	onLoad="initFont(); S1.onchange(); MSC();">
+	<object id="DGH" classid="clsid:3050f819-98b5-11cf-bb82-00aa00bdce0b" width=0 height=0></object>
+	<div id="Mai">
+		<table width="100%">
+			<tr valign="top">
+				<td>
+					字型：<select id="FONT" style="font:9pt 'Times New Roman'; width:150px;"
+						onChange="document.styleSheets[0].rules[1].style.fontFamily=this.value;
+							T.T.style.fontFamily=this.value;">
+						<option value="Courier New">預設</option>
+					</select>
+				<td align="right">
+					<input type="button" hideFocus value="使用說明" onClick="Mai.style.display='none'; HLP.style.display='block';">
+			<tr valign="top">
+				<td>
+					字庫：<select id="MS" onChange="MSC()" style="width:150px;">
+						<option value=7 >拉丁文擴充
+						<option value=14>國際音標擴充
+						<option value=15>組合區別音符標示
+						<option value=6 >斯拉夫文
+						<option value=5 >希臘文
+						<option value=4 >希伯來文
+						<option value=3 >阿拉伯文
+						<option value=16>梵文
+						<option value=9 >泰文
+						<option value=17>加拿大音節文字
+						<option value=10>中日韓標點符號
+						<option value=2 >日文假名
+						<option value=13>韓文字母
+						<option value=8 >各類型符號
+						<option value=1 >中日韓相容符號
+						<option value=19>中日韓漢字部首
+						<option value=0 selected>中日韓漢字
+						<option value=18>中日韓漢字擴充 AB
+						<option value=11>爨文
+						<option value=12>韓文
+					</select>
+				<td align="right">
+					<input type="button" hideFocus value="字庫說明" onClick="INF();">
+		</table>
+		<hr>
+		<div id="CJKP">
+			<table width="100%">
+				<tr valign="top"><td>
+						部首筆劃：<select id="S1" onChange="CJK1(this.value);"
+							onActivate="if(AO!=S2) { CJK2(S2.value); AO=S2;}">
+						<script type="text/javascript">
+							for(i=1;i<18;i++) document.write("<option value='"+(i-1)+"'>"+i);
+						</script>
+						</select>　<select id="S2" onChange="CJK2(this.value);"
+							onActivate="if(AO!=S2) { CJK2(S2.value); AO=S2;}">
+						</select>
+					<td align="right">
+						難檢字筆劃：<select id="S3" onChange="CJK3(this.value);"
+							onActivate="if(AO!=S3) { CJK3(S3.value); AO=S3;}">
+						<script type="text/javascript">
+							for(i=1;i<18;i++) document.write("<option value='"+(i-1)+"'>"+i);
+						</script>
+						</select><br><span style="font:8px;"><br></span>
+			</table>
+		</div>
+		<div id="HGLP">
+			<table width="100%">
+				<tr valign="top"><td>
+					初聲：<select id="H1" onChange="HG();">
+						<script type="text/javascript">
+							for(i=0;i<HGLJ.length;i++) document.write("<option value='"+i+"'>&#x31"+HGLJ[i]);
+						</script>
+					</select> 中聲：<select id="H2" onChange="HG();">
+						<script type="text/javascript">
+							for(i=0x314F;i<0x3164;i++) document.write("<option value='"+(i-0x314F)+"'>&#"+i+";");
+						</script>
+					</select><br><span style="font:8px;"><br></span>
+			</table>
+		</div>
+		<div id="WB"
+			title="請在這裡挑選要加入轉換框的字元。按一下即可加入；連續按兩下則除了加入之外，同時也複製到剪貼簿中。"
+			onSelectStart="event.cancelBubble=true;" onContextMenu="event.cancelBubble=true;"
+			onMouseMove="SEL(0)" onMouseOut="try { T.T.s.select();} catch(e) {}" onClick="SEL(1)" onDblClick="SEL(2)">
+		</div>
+		<br>
+		<div id="Chg">
+			<iframe id="T" style="height:95px;" src="ex.htm" application="yes"></iframe>
+			<table width="100%">
+				<tr valign="top"><td>
+					<input type="button" hideFocus value="日文假名互轉" onClick="JEX();" title="將櫻花假名字和 Unicode 假名字互相轉換。">　<input hideFocus type="button" value="參照碼互轉" onClick="EX();" title="在原始文字和網頁參照碼之間互相轉換。">
+				<td align="right">
+					<input type="button" hideFocus value="轉換設定" onClick="Chg.style.display='none'; Set.style.display='block';" title="因應不同的需求，做不同模式的參照碼轉換設定。">
+			</table>
+		</div>
+		<div id="Set">
+			<table width="100%">
+				<tr><td valign="top" width=180>
+					<label for="C1" title="大部分的時候，我們只需要將非 Big5 字集的字元轉換成參照碼，其餘依舊，就可以放在網頁上了。&#13;不過如果您的網頁不是採用 Big5 編碼，您可能會需要把所有的文字都轉換成參照碼，取消這個選項可以達到這個效果。"><input id="C1" type="checkbox" class="C" checked hideFocus> 保留 Big5 支援的字元</label><br>
+					<label for="C2" title="IE 瀏覽器支援許多實體名稱，比方說 &amp;Aacute; 就等於 &amp;#193; 等等。本軟體收錄了大部分 IE 所支援的實體名稱，啟動這個選項，可以將那些文字以實體名稱的方式呈現。"><input id="C2" type="checkbox" checked class="C" hideFocus> 啟動實體名稱轉換</label><br>
+					<label for="C3" title="將文字放入網頁原始碼時，您也許會需要在換行處加入 <br>，使用這個選項能啟動這項機制。"><input id="C3" type="checkbox" class="C" hideFocus> 啟動 &lt;br> 自動轉換</label><br>
+					<label for="C4" title="若要直接針對網頁原始碼進行單純的文字轉換，可使用這個功能使得原始碼不會被更動。本功能將使得所有 Unicode 碼小於 0x7F 的字元被保留下來。"><input id="C4" type="checkbox" class="C" hideFocus> 保留原始碼</label><br>
+					<td valign="top" width=100>
+					參照碼轉換成：<br>
+					<label for="R0" title="以 10 進位呈現參照碼，格式為「&amp;#...;」。大部分的情況中使用 10 進位會比較節省轉換出來的字串長度。"><input type="radio" id="R0" name="R" class="C" checked hideFocus> 10 進位碼</label><br><label for="R1" title="以 16 進位呈現參照碼，格式為「&amp;#x...;」。大部分的情況中使用 16 進位會使轉換出來的文字比較長，所以除非有特殊用途，不然不建議使用此選項。"><input type="radio" id="R1" name="R" class="C" hideFocus> 16 進位碼</label><br>
+				<tr><td valign="bottom" align="right" colspan=2>
+					<input type="button" hideFocus value="設定完成" onClick="Chg.style.display='block'; Set.style.display='none';" title="設定完成，回到剛才的畫面。" style="position:relative; top:11px;">
+			</table>
+		</div>
+
+		<span id="E" style="display:none;"></span>
+		<iframe name="K" style="display:none;" src="ex2.htm" application="yes"></iframe>
+
+		<script type="text/javascript">
+			AO=S1; CJK1(0); if(document.charset!="big5") { document.charset="big5"; location.reload();}
+			document.styleSheets[0].rules[0].style.width=WB.scrollWidth+1;
+			var Title=document.title;
+		</script>
+	</div>
+
+<div id="HLP" style="display:none; position:absolute; top:10px; left:10px;
+height:385px; width:270px; background:buttonface;">
+<textarea cols=45 rows=24 style="font:9pt 新細明體; cursor:default;" readOnly>使用說明：
+
+「北斗字碼轉換器」是一套專門為網頁製作者和文書處理者所設計，包含三項字碼轉換功能於一身的小程式。它包括了：Unicode 字元集查詢功能、日文假名轉換功能和參照碼轉換功能三項。
+
+1. Unicode 字元集查詢功能
+　　無論是網頁設計或是文書處理時，都經常會用到一些 Big5 字元集以外的文字。這些文字可能是罕用的漢字，可能是日文，也有可能是其他種類的語系。在過去，解決的方法也許就是用延伸字集，但是一則延伸字集不可能包含所有的外國語系，一則也和目前世界最通用的 Unicode 規格不相容。在 Unicode 推行之後，這些問題都輕鬆解決了。Unicode 字元集包括了世界上大部分的主要語言，同時也包含所有的 Big5 不支援的罕用漢字在內（例如：「&#22531;」、「&#27810;」等等），讓使用者能夠順利在文書和網頁上使用其他的字元。
+　　然而要使用 Unicode 字元，對大部分的使用者來說仍然是一項困難的事。因為要從龐大的 Unicode 字元庫（例如 Word 所提供的字庫）中尋找要使用的字元，可說難比登天；而大部分的使用者也不擅長使用外語輸入法或鍵盤配置，因而使得 Unicode 在國內鮮少被使用。
+　　不過，本軟體提供了您完整的 Unicode 字元查詢功能（註 1）。本軟體和 IE 的語系支援連結，只要您系統的 IE 有安裝對應的語系支援，您就可以順利使用本軟體所提供的各項分區。例如，如果要顯示出完整的中日韓漢字集，您必須安裝簡體字支援和日文字支援。而其他分區也只要安裝對應的語系支援即可正常顯示（註 2）。
+　　當滑鼠指到選字框的文字上時，文字會反白顯示，這個時候按一下即可加入下面的轉換框，或者按兩下複製，以便接下來的程序。
+
+　　其中，中日韓漢字的部分，採用部首編排，或者您亦可從難檢字表（註 3）中找到想要加入的文字。其中字體較為粗者，就是非 Big5 的漢字，您可以先從這些字找起。
+　　另外，在希伯來文和阿拉伯文之中，都分成前後兩部分，前半部是實際輸入時使用的字母，後半部則是單純為了顯示使用的字型。建議您從前半部挑選文字較佳。
+　　
+　　找到了要使用的字之後，如果您是要將字用在文書中，請確定您使用的文書處理軟體支援 Unicode（例如 Word），然後就可以將字直接複製過去。在少部分的例子中，可能會出現字在文書軟體中看不到或無法列印的情形，這種時候您可以試著將中文字型換成支援 Unicdoe 的字型（例如 Office 2000 內建的 Arial Unicode MS 字型，或 MS Hei、SimSun 等中文字型），應當就可以解決。
+　　而如果您是網頁設計者，請先將文字加入到下方的轉換框中，再使用本軟體的「參照碼轉換功能」，取得文字的參照碼。2.1 版中，新增了 <br> 轉換功能，如果您需要本軟體自動替您在換行的地方加上 <br>，可以啟動該選項。
+
+2. 日文假名轉換功能
+　　曾有一段時間櫻花輸入法在國內普遍流行。它提供了日文的假名字延伸字集，讓中文作業系統也能使用日文假名字。但隨著多國語言瀏覽功能的出現，網頁製作的趨勢，也逐漸改採用國際化的 Unicode 編碼，來產生與日本國內使用的 Shift-JIS 編碼或 EUC 編碼相容的日文字。本軟體的假名轉換功能，能夠讓您在櫻花假名和 Unicode 假名之間作轉換動作。
+　　要使用此功能，只要將欲進行轉換的文字加入轉換框中，按下「日文假名互轉」的按鈕，就可以在兩種系統之間進行轉換動作了。使用時請注意，本軟體目前只能轉換假名字的部分，對於其他櫻花輸入法提供的特殊漢字、符號等尚不支援。
+
+3. 參照碼轉換功能
+　　無論是在網頁中使用罕見漢字或者是其他 Unicode 的字元，都必須以參照碼的形式寫於網頁原始碼內，方能正確顯示。將想要放在網頁內的文字複製到轉換框中，按下「參照碼互轉」的按鈕，就可以在原始文字和參照碼之間互相轉換，然後您就可以把該段原始碼複製到您的網頁中了。
+　　在「轉換設定」中，您可以依照需求自行設定轉換的模式，每一個選項都有說明文字，將滑鼠停留在選項上即可看到相關說明。
+　　注意，部分罕用漢字直接放在網頁中可能會有看不到的情形，這種時候可以將網頁字型設為如 Courier New 之類的英文字型，即可解決。
+
+以上就是本軟體的功能介紹，祝您使用愉快！
+
+
+註：
+1.
+如果想要了解各個字庫屬於哪些 Unicode 區間，可以按下「明細」鈕得知。
+這是依照 Unicode.org 中公告的區間名稱編寫。
+2.
+若要新增 IE 的語系支援，從控制台「新增/移除程式」中，選擇「Microsoft Internet Explorer 6.0 和網際網路工具」，進入後選擇「新增元件」，即可安裝語系支援。
+您不需要擔心在網頁上使用外語系的字元對方會無法瀏覽，因為當瀏覽者進入您的網頁時，IE 會提示他安裝必要的元件。
+3.
+本軟體的難檢字表以電腦排列筆劃順序，難保不會有些許的計算錯誤，如果您發現了有任何一個字的筆劃數不正確，請來信告知，以利下一個版本的修正改進。
+
+
+版本資訊：
+
+北斗字碼轉換器 2.8 版
+作者：星君（蔡牧村）
+信箱：stargazer@abstreamace.com
+網址：http://www.abstreamace.com/sglab/
+
+本程式由星君撰寫，為免費共享軟體，敬請多加散播分享，祝您使用愉快。若有任何意見，都歡迎來信指教。</textarea><br><br>
+<input type="button" value="關閉使用說明" onClick='Mai.style.display="block"; HLP.style.display="none";'><br><br>
+</div>

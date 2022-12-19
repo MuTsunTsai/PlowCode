@@ -1,0 +1,52 @@
+<html>
+	<head>
+		<title>參照碼轉換器</title>
+		<meta http-equiv="content-type" content="text/html; charset=big5">
+		<style type="text/css">
+			body					{ background:buttonface; margin:0px;}
+			body, input, textarea	{ font:9pt 新細明體;}
+			input, textarea			{ border:1px solid black; background:skyblue;}
+			.B						{ height:19px;}
+		</style>
+	<body>
+		<form id="F" action="ex2.htm" method="get" target="H">
+			<textarea name="T" cols=34 rows=5></textarea>
+		</form>
+		<span id="E" style="display:none;"></span>
+		<iframe name="H" style="display:none;" application="yes"></iframe>
+		<script type="text/javascript">
+			var co="iexcl;cent;pound;curren;yen;brvbar;sect;uml;copy;ordf;laquo;not;shy;reg;macr;deg;plusmn;sup2;sup3;acute;micro;para;middot;cedil;sup1;ordm;raquo;frac14;frac12;frac34;iquest;Agrave;Aacute;Acirc;Atilde;Auml;Aring;AElig;Ccedil;Egrave;Eacute;Ecirc;Euml;Igrave;Iacute;Icirc;Iuml;ETH;Ntilde;Ograve;Oacute;Ocirc;Otilde;Ouml;times;Oslash;Ugrave;Uacute;Ucirc;Uuml;Yacute;THORN;szlig;agrave;aacute;acirc;atilde;auml;aring;aelig;ccedil;egrave;eacute;ecirc;euml;igrave;iacute;icirc;iuml;eth;ntilde;ograve;oacute;ocirc;otilde;ouml;divide;oslash;ugrave;uacute;ucirc;uuml;yacute;thorn;yuml;".match(/.+?;/g);
+			var gr="Alpha;Beta;Gamma;Delta;Epsilon;Zeta;Eta;Theta;Iota;Kappa;Lambda;Mu;Nu;Xi;Omicron;Pi;Rho;;Sigma;Tau;Upsilon;Phi;Chi;Psi;Omega;;;;;;;;alpha;beta;gamma;delta;epsilon;zeta;eta;theta;iota;kappa;lambda;mu;nu;xi;omicron;pi;rho;sigmaf;sigma;tau;upsilon;phi;chi;psi;omega;".match(/.*?;/g);
+			if(parent!=top) {
+				var s=location.search.replace(/\?T=/, ""), p=top, t=escape(p.Buffer[p.BF]);
+				s=s.replace(/%(..)/g, function($0, $1) { return String.fromCharCode(eval("0x"+$1));});
+				s=s.replace(/&/g, "&amp;");
+				t=t.replace(/%uD(...)%uD(...)/g, function($0, $1, $2) {
+					$1=eval("0x"+$1); if($1<0x800) return $0; else $1-=0x800;
+					$2=eval("0x"+$2)-0xC00; return "&amp;#"+($1*0x400+$2+0x10000)+";";}
+				);
+				t=t.replace(/%u(....)/g, function($0, $1) { return "&amp;#"+eval("0x"+$1)+";";});
+				t=t.replace(/%(..)/g, function($0, $1) {
+					var c=eval("0x"+$1)-160; return c>0?"&amp;"+(p.C2.checked?co[c-1]:"#"+(c+160)+";"):"%"+$1;});
+				t=t.replace(/%26%23(.+?)%3B/g, function($0, $1) { return "&#"+$1+";";});
+				t=t.replace(/%26(.+?)%3B/g, function($0, $1) { return "&"+$1+";";});
+				t=t.replace(/%(..)/g, function($0, $1) { var c=eval("0x"+$1);
+					return ((p.C4.checked&&c<0x7F&&c!=13&&c!=10)?"&":"&amp;")+"#"+c+";";});
+				if(p.C2.checked) t=t.replace(/&amp;#(.+?);/g, function($0, $1) { var c=eval($1), r=$0;
+					if(c==402) r="&amp;fonf;"; if(c>912&&c<970&&gr[c-913]!=";") r="&amp;"+gr[c-913]; return r;});
+				if(p.C1.checked) t=t.replace(/&amp;#(.+?);/g, function($0, $1) { 
+					if(eval($1)>1000) return s.match($0)?$0:"&#"+$1+";"; else return $0;});
+				t=t.replace(/&amp;#32;/g, p.C2.checked?"&amp;nbsp;":"&amp;#160;");
+				if(p.R[1].checked) t=t.replace(/&amp;#(.+?);/g, function($0, $1) {
+					return "&amp;#x"+eval($1).toString(16).toUpperCase()+";";});
+				p.Buffer[p.BF]=t;
+				if(p.BF==p.Buffer.length-1) {
+					t=unescape(p.Buffer.join("")).replace(/&amp;#13;&amp;#10;/g, "<br>");
+					if(p.C3.checked) t=t.replace(/<br>/g, "&lt;br><br>").replace(/&amp;#60;br&amp;#62;&lt;br>/g, "");
+					E.innerHTML=t.replace(/&#9;/g, ""); t=E.innerText.replace(//g, "\t");
+					if(p.T.T.s.text) { p.T.T.s.text=t; p.T.T.s.moveStart("character", -t.length);
+						p.T.T.s.moveEnd("character", t.length);} else p.T.T.value=t;
+					p.T.T.s.select(); p.Buffer=""; p.T.T.focus(); p.document.title=p.Title;
+				} else p.EX();
+			}
+		</script>
